@@ -18,11 +18,3 @@ public class KafkaApplication extends SpringBootServletInitializer {
         }
     }
 }
-
-
-//    @Bean
-//    public CommandLineRunner init() {
-//        return args -> {
-//            new SparkStreaming().startSpark();
-//        };
-//    }
