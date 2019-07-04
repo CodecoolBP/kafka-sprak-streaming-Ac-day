@@ -1,8 +1,12 @@
 package com.kafka.spark.mortoff.kafka.model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
+    private Integer id;
     private String name;
     private int age;
+    private String country;
 
     public User() {
     }
@@ -26,5 +30,31 @@ public class User {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", country=" + country +
+                '}';
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCountry() {
+        return country;
     }
 }
