@@ -1,9 +1,11 @@
 package com.kafka.spark.mortoff.kafka.service;
 
+import com.kafka.spark.mortoff.kafka.model.User;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.SparkConf;
 import org.apache.spark.streaming.Durations;
+import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.ConsumerStrategies;
@@ -42,17 +44,27 @@ public class SparkStreaming {
                         LocationStrategies.PreferConsistent(),
                         ConsumerStrategies.Subscribe(topics, kafkaParams)
                 );
-//        JavaDStream<String> mapped = stream.map(a -> {
-//            String string = a.value();
-//            System.out.println(string);
-//            return string;
-//        });
 
-//        mapped.foreachRDD(rdd -> {
-//            System.out.println(rdd.toString());
-//        });
+        JavaDStream<User> mapped = stream.map(data -> {
+            User user = new User();
 
-        stream.print();
+            String[] values = data.value().split(",");
+
+            user.setId(Integer.valueOf(values[0]));
+            user.setName(values[1]);
+            user.setCountry(values[2]);
+            user.setAge(Integer.parseInt(values[3]));
+
+            return user;
+        });
+
+        mapped.foreachRDD(rdd -> {
+            rdd.foreach(a -> {
+                System.out.println(a.toString());
+            });
+        });
+
+//        stream.print();
         streamingContext.start();
         streamingContext.awaitTermination();
     }

@@ -6,6 +6,7 @@ public class User implements Serializable {
     private Integer id;
     private String name;
     private int age;
+    private String country;
 
     public User() {
     }
@@ -48,4 +49,11 @@ public class User implements Serializable {
                 '}';
     }
 
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCountry() {
+        return country;
+    }
 }
