@@ -11,6 +11,7 @@ public class UserService {
 
     public void savePerson(User user) {
         users.add(user);
+        System.out.println(users);
     }
 
     public User lastUser() {

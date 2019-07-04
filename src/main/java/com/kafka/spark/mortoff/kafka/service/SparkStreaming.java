@@ -1,5 +1,6 @@
 package com.kafka.spark.mortoff.kafka.service;
 
+import com.kafka.spark.mortoff.kafka.controller.KafkaController;
 import com.kafka.spark.mortoff.kafka.model.User;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -19,8 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SparkStreaming {
-    @Autowired
-    UserService userService;
 
     public void startSpark() throws InterruptedException {
         Map<String, Object> kafkaParams = new HashMap<>();
@@ -57,18 +56,22 @@ public class SparkStreaming {
             user.setName(values[1]);
             user.setCountry(values[2]);
             user.setAge(Integer.parseInt(values[3]));
-
+//            userService.savePerson(user);
             return user;
         });
 
         mapped.foreachRDD(rdd -> {
+
             rdd.foreach(person -> {
+//                userService.savePerson(person);
                 System.out.println(person.toString());
-                userService.savePerson(person);
+                KafkaController.user(person);
             });
         });
 
 //        stream.print();
+//        mapped.print();
+
         streamingContext.start();
         streamingContext.awaitTermination();
     }
