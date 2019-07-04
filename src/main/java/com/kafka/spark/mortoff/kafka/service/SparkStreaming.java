@@ -11,6 +11,7 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,6 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SparkStreaming {
+    @Autowired
+    UserService userService;
 
     public void startSpark() throws InterruptedException {
         Map<String, Object> kafkaParams = new HashMap<>();
@@ -59,8 +62,9 @@ public class SparkStreaming {
         });
 
         mapped.foreachRDD(rdd -> {
-            rdd.foreach(a -> {
-                System.out.println(a.toString());
+            rdd.foreach(person -> {
+                System.out.println(person.toString());
+                userService.savePerson(person);
             });
         });
 
